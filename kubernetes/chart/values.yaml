@@ -1,0 +1,20 @@
+replicas: 1
+
+nodeEnv: development
+host: 0.0.0.0
+port: 3333
+logLevel: info
+appKey: YdfEn1Xw8z9FcMPwdDBhn7Sw6RiSR6Vv
+
+postgres:
+  host: 0.0.0.0
+  port: 5432
+  database: backend
+  credentialsSecret: backend-postgres-credentials
+
+image:
+  registry: ghcr.io
+  repository: placecare/backend
+  pullSecretName: registry-credentials
+
+
