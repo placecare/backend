@@ -1,2 +1,1 @@
-export default class ProfessionalService {
-}
+export default class ProfessionalService {}
