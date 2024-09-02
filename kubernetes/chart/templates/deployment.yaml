@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}-backend
-          image: "{{ .Values.global.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           env:
             - name: NODE_ENV
               value: {{ .Values.nodeEnv | quote  }}
