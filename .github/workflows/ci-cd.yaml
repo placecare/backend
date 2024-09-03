@@ -75,6 +75,8 @@ jobs:
           VERSION=$(git rev-parse --short HEAD)
           echo "Version develop qui sera déployé sur le helmfile develop: $VERSION"
           yq -ie ".image.tag=\"$VERSION\"" ./kubernetes/helmfiles/develop/values.yaml
+      - name: Run a command with the secret
+        run: my-command --secret=${{ secrets.PAT }}
       - name: Commit changes
         run: |
           VERSION=$(git rev-parse --short HEAD)
@@ -83,8 +85,6 @@ jobs:
           git add kubernetes/helmfiles/develop/values.yaml
           git commit -m "Update develop values.yaml to $VERSION"
           git push
-      - name: Run a command with the secret
-        run: my-command --secret=${{ secrets.PAT }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
   build-and-push:
