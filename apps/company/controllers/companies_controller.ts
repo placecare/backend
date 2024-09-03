@@ -1,10 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-//import ProfessionalService from '#apps/professional/services/professional_service'
+//import CompanyService from '#apps/company/services/company_service'
 
 @inject()
-export default class ProfessionalsController {
-  //constructor(private professionalService: ProfessionalService) {}
+export default class CompaniesController {
+  //constructor(private companyService: CompanyService) {}
 
   /**
    * Display a list of resource
