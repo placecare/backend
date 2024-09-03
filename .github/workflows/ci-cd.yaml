@@ -78,12 +78,13 @@ jobs:
       - name: Commit changes
         run: |
           VERSION=$(git rev-parse --short HEAD)
-          echo "PAT : ${{ secrets.PAT }}"
           git config user.name "GitHub Actions"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add kubernetes/helmfiles/develop/values.yaml
           git commit -m "Update develop values.yaml to $VERSION"
           git push
+      - name: Run a command with the secret
+        run: my-command --secret=${{ secrets.PAT }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
   build-and-push:
