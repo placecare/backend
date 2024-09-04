@@ -1,3 +1,13 @@
 import router from '@adonisjs/core/services/router'
+import { middleware } from '#start/kernel'
 
-router.group(() => {}).prefix('company')
+const CompaniesController = () => import('#apps/company/controllers/companies_controller')
+router
+  .group(() => {
+    router
+      .group(() => {
+        router.get('/', [CompaniesController, 'index'])
+      })
+      .prefix('/v1/companies')
+  })
+  .use(middleware.auth())
