@@ -24,7 +24,8 @@ export default class CompaniesController {
   }
 
   /**
-   * Show individual record
+   * @show
+   * @operationId getCompany
    */
   async show({ params }: HttpContext) {
     const { id } = params
@@ -32,23 +33,30 @@ export default class CompaniesController {
   }
 
   /**
-   * Handle form submission for the create action
+   * @create
    */
-  async store({ request, bouncer }: HttpContext) {
+  async store({ request, bouncer, response }: HttpContext) {
     await bouncer.with(CompanyPolicy).authorize('create' as never)
     const data = await request.validateUsing(createCompanyValidator)
 
-    return data
+    const company = await this.companyService.create(data)
+    return response.created(company)
     //return this.companyService.create(data)
   }
 
   /**
    * Handle form submission for the edit action
    */
-  async update({}: HttpContext) {}
+  async update({ bouncer }: HttpContext) {
+    await bouncer.with(CompanyPolicy).authorize('update' as never)
+    //return this.companyService
+  }
 
   /**
    * Delete record
    */
-  async destroy({}: HttpContext) {}
+  async delete({ bouncer, params }: HttpContext) {
+    await bouncer.with(CompanyPolicy).authorize('delete' as never)
+    return this.companyService.deleteById(params.id)
+  }
 }
