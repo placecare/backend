@@ -1,17 +1,24 @@
-import { BaseModel, beforeCreate, belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import { generateSnowflake } from '#apps/shared/services/snowflake_service'
-import Professional from '#apps/professional/models/professional'
-import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
+import Identity from '#apps/shared/models/identity'
 import Address from '#apps/shared/models/address'
 import Contact from '#apps/shared/models/contact'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import ProfessionalType from '#apps/shared/models/professional_type'
 
-export default class Company extends BaseModel {
+export default class Professional extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
   @column()
-  declare name: string
+  declare oidcId: string
+
+  @column()
+  declare professionalTypeId: string
+
+  @column()
+  declare identityId: string
 
   @column()
   declare addressId: string
@@ -19,11 +26,8 @@ export default class Company extends BaseModel {
   @column()
   declare contactId: string
 
-  @column()
-  declare siret: string
-
-  @column()
-  declare approvalNumber: string
+  @belongsTo(() => Identity)
+  declare identity: BelongsTo<typeof Identity>
 
   @belongsTo(() => Address)
   declare address: BelongsTo<typeof Address>
@@ -31,8 +35,8 @@ export default class Company extends BaseModel {
   @belongsTo(() => Contact)
   declare contact: BelongsTo<typeof Contact>
 
-  @manyToMany(() => Professional)
-  declare professionals: ManyToMany<typeof Professional>
+  @belongsTo(() => ProfessionalType)
+  declare professionalType: BelongsTo<typeof ProfessionalType>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -41,7 +45,7 @@ export default class Company extends BaseModel {
   declare updatedAt: DateTime | null
 
   @beforeCreate()
-  static async generateUuid(model: Company) {
+  static async generateUuid(model: Professional) {
     model.id = generateSnowflake()
   }
 }
