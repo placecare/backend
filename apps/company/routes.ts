@@ -7,6 +7,8 @@ router
     router
       .group(() => {
         router.get('/', [CompaniesController, 'index'])
+        router.get('/:id', [CompaniesController, 'show'])
+        router.post('/', [CompaniesController, 'store'])
       })
       .prefix('/v1/companies')
   })
