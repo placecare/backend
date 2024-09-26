@@ -17,7 +17,7 @@
     "#apps/*": "./apps/*.js",
     "#controllers/*": "./app/controllers/*.js",
     "#exceptions/*": "./app/exceptions/*.js",
-    "#models/*": "./app/*.js",
+    "#models/*": "./apps/shared/models/*.js",
     "#mails/*": "./app/mails/*.js",
     "#services/*": "./app/services/*.js",
     "#listeners/*": "./app/listeners/*.js",
@@ -55,7 +55,8 @@
   },
   "dependencies": {
     "@adonisjs/auth": "^9.2.3",
-    "@adonisjs/core": "^6.12.1",
+    "@adonisjs/bouncer": "^3.1.3",
+    "@adonisjs/core": "^6.14.0",
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/lucid": "^21.1.1",
     "@vinejs/vine": "^2.1.0",
