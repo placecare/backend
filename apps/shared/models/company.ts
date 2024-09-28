@@ -42,6 +42,8 @@ export default class Company extends BaseModel {
 
   @beforeCreate()
   static async generateUuid(model: Company) {
-    model.id = generateSnowflake()
+    if (!model.id) {
+      model.id = generateSnowflake()
+    }
   }
 }

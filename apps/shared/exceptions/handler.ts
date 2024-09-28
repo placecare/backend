@@ -2,6 +2,7 @@ import app from '@adonisjs/core/services/app'
 import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import { errors as authErrors } from '@adonisjs/auth'
 import * as authenticationErrors from '#apps/authentication/errors'
+import { errors as lucidErrors } from '@adonisjs/lucid'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
@@ -17,6 +18,15 @@ export default class HttpExceptionHandler extends ExceptionHandler {
   async handle(error: unknown, ctx: HttpContext) {
     if (error instanceof authErrors.E_UNAUTHORIZED_ACCESS) {
       ctx.response.status(401).send({
+        message: error.message,
+        code: error.code,
+        status: error.status,
+      })
+      return
+    }
+
+    if (error instanceof lucidErrors.E_ROW_NOT_FOUND) {
+      ctx.response.status(404).send({
         message: error.message,
         code: error.code,
         status: error.status,
