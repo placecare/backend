@@ -30,7 +30,30 @@ export const createCompanyValidator = vine.compile(
  * Validator to validate the payload when updating
  * an existing company.ts.
  */
-export const updateCompanyValidator = vine.compile(vine.object({}))
+export const updateCompanyValidator = vine.compile(
+  vine.object({
+    name: vine.string().optional(),
+    siret: vine.string().optional(),
+    approvalNumber: vine.string().optional(),
+    address: vine
+      .object({
+        street: vine.string().optional(),
+        postalCode: vine.string().optional(),
+        city: vine.string().optional(),
+        region: vine.string().optional(),
+        country: vine.string().optional(),
+      })
+      .optional(),
+    contact: vine
+      .object({
+        email: vine.string().optional(),
+        mobilePhone: vine.string().optional(),
+        landlinePhone: vine.string().optional(),
+        website: vine.string().optional(),
+      })
+      .optional(),
+  })
+)
 
 export const getCompaniesValidator = vine.compile(
   vine.object({

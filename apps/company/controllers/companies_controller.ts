@@ -1,7 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import CompanyService from '#apps/company/services/company_service'
-import { createCompanyValidator, getCompaniesValidator } from '#apps/company/validators/company'
+import {
+  createCompanyValidator,
+  getCompaniesValidator,
+  updateCompanyValidator,
+} from '#apps/company/validators/company'
 import CompanyPolicy from '#apps/company/policies/company_policy'
 
 @inject()
@@ -27,8 +31,9 @@ export default class CompaniesController {
    * @show
    * @operationId getCompany
    */
-  async show({ params }: HttpContext) {
+  async show({ params, bouncer }: HttpContext) {
     const { id } = params
+    await bouncer.with(CompanyPolicy).authorize('view' as never)
     return this.companyService.findById(id)
   }
 
@@ -47,16 +52,21 @@ export default class CompaniesController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ bouncer }: HttpContext) {
+  async update({ request, bouncer, params }: HttpContext) {
     await bouncer.with(CompanyPolicy).authorize('update' as never)
-    //return this.companyService
+    const data = await request.validateUsing(updateCompanyValidator)
+    const { id } = params
+
+    return this.companyService.updateById(id, data)
   }
 
   /**
    * Delete record
    */
-  async delete({ bouncer, params }: HttpContext) {
+  async delete({ bouncer, params, response }: HttpContext) {
     await bouncer.with(CompanyPolicy).authorize('delete' as never)
-    return this.companyService.deleteById(params.id)
+    await this.companyService.deleteById(params.id)
+
+    return response.noContent()
   }
 }
