@@ -1,5 +1,9 @@
 import Company from '#apps/shared/models/company'
-import { CreateCompanySchema, GetCompaniesSchema } from '#apps/company/validators/company'
+import {
+  CreateCompanySchema,
+  GetCompaniesSchema,
+  UpdateCompanySchema,
+} from '#apps/company/validators/company'
 import { inject } from '@adonisjs/core'
 import AddressService from '#apps/shared/services/address_service'
 import ContactService from '#apps/shared/services/contact_service'
@@ -16,7 +20,12 @@ export default class CompanyService {
   }
 
   async findById(id: string) {
-    return Company.query().where('id', id).preload('professionals').firstOrFail()
+    return Company.query()
+      .where('id', id)
+      .preload('professionals')
+      .preload('address')
+      .preload('contact')
+      .firstOrFail()
   }
 
   async create(payload: CreateCompanySchema) {
@@ -32,6 +41,20 @@ export default class CompanyService {
     await company.load('contact')
 
     return company
+  }
+
+  async updateById(id: string, payload: UpdateCompanySchema) {
+    const company = await this.findById(id)
+
+    if (payload.address) {
+      await company.address.merge(payload.address).save()
+    }
+
+    if (payload.contact) {
+      await company.contact.merge(payload.contact).save()
+    }
+
+    return company.merge(payload).save()
   }
 
   async deleteById(id: string) {

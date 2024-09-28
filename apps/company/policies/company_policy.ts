@@ -35,4 +35,20 @@ export default class CompanyPolicy extends BasePolicy {
 
     return AuthorizationResponse.deny('You are not authorized to create companies', 403)
   }
+
+  async update(payload: JWTPayload) {
+    if (this.roleService.verifyAccess(payload, Roles.CREATE_COMPANY)) {
+      return AuthorizationResponse.allow()
+    }
+
+    return AuthorizationResponse.deny('You are not authorized to update companies', 403)
+  }
+
+  async delete(payload: JWTPayload) {
+    if (this.roleService.verifyAccess(payload, Roles.CREATE_COMPANY)) {
+      return AuthorizationResponse.allow()
+    }
+
+    return AuthorizationResponse.deny('You are not authorized to delete companies', 403)
+  }
 }
