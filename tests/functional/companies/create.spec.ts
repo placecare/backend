@@ -107,4 +107,30 @@ test.group('Companies create', () => {
       },
     ])
   })
+
+  test('should fail to create a company with not authorized user', async ({ assert, client }) => {
+    const professional = await Professional.firstOrFail()
+
+    const response = await client.post('/v1/companies').json({}).loginAs(professional, [])
+
+    assert.properties(response.body(), ['message', 'code', 'status'])
+    assert.equal(response.body().message, 'You are not authorized to create companies')
+    assert.equal(response.body().code, 'E_COMPANY_FORBIDDEN')
+    assert.equal(response.body().status, 403)
+
+    response.assertStatus(403)
+  })
+
+  test('should fail to create a company without being authenticated', async ({
+    assert,
+    client,
+  }) => {
+    const response = await client.post('/v1/companies').json({})
+
+    assert.properties(response.body(), ['message', 'code', 'status'])
+    assert.equal(response.body().message, 'Unauthorized')
+    assert.equal(response.body().code, 'E_AUTHENTICATION_UNAUTHORIZED')
+    assert.equal(response.body().status, 401)
+    response.assertStatus(401)
+  })
 })
