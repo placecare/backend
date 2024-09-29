@@ -37,8 +37,8 @@ export default class CompanyService {
       addressId: address.id,
       contactId: contact.id,
     })
-    await company.load('address')
-    await company.load('contact')
+
+    await Promise.all([company.load('address'), company.load('contact')])
 
     return company
   }
