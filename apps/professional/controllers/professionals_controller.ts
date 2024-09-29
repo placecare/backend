@@ -2,7 +2,10 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import ProfessionalService from '#apps/professional/services/professional_service'
 import ProfessionalPolicy from '#apps/professional/policies/professional_policy'
-import { getProfessionalsValidator } from '#apps/professional/validators/professional'
+import {
+  createProfessionalValidator,
+  getProfessionalsValidator,
+} from '#apps/professional/validators/professional'
 
 @inject()
 export default class ProfessionalsController {
@@ -21,12 +24,21 @@ export default class ProfessionalsController {
   /**
    * Handle form submission for the create action
    */
-  async store({}: HttpContext) {}
+  async store({ request, bouncer, response }: HttpContext) {
+    await bouncer.with(ProfessionalPolicy).authorize('create' as never)
+    const data = await request.validateUsing(createProfessionalValidator)
+    const professional = await this.professionalService.create(data)
+
+    return response.created(professional)
+  }
 
   /**
    * Show individual record
    */
-  async show({}: HttpContext) {}
+  async show({ params, bouncer }: HttpContext) {
+    await bouncer.with(ProfessionalPolicy).authorize('view' as never)
+    return this.professionalService.findById(params.id)
+  }
 
   /**
    * Handle form submission for the edit action

@@ -1,4 +1,7 @@
-import { GetProfessionalsSchema } from '#apps/professional/validators/professional'
+import {
+  CreateProfessionalSchema,
+  GetProfessionalsSchema,
+} from '#apps/professional/validators/professional'
 import Professional from '#apps/shared/models/professional'
 
 export default class ProfessionalService {
@@ -10,5 +13,13 @@ export default class ProfessionalService {
         })
       })
       .paginate(page, limit)
+  }
+
+  async findById(id: string) {
+    return Professional.findOrFail(id)
+  }
+
+  async create(payload: CreateProfessionalSchema) {
+    return Professional.create(payload)
   }
 }

@@ -5,7 +5,15 @@ import { Infer } from '@vinejs/vine/types'
  * Validator to validate the payload when creating
  * a new professional.ts.
  */
-export const createProfessionalValidator = vine.compile(vine.object({}))
+export const createProfessionalValidator = vine.compile(
+  vine.object({
+    contact: vine.object({
+      email: vine.string().email().optional(),
+      mobilePhone: vine.string().optional(),
+      landlinePhone: vine.string().optional(),
+    }),
+  })
+)
 
 /**
  * Validator to validate the payload when updating
