@@ -13,5 +13,13 @@ export const createProfessionalValidator = vine.compile(vine.object({}))
  */
 export const updateProfessionalValidator = vine.compile(vine.object({}))
 
+export const getProfessionalsValidator = vine.compile(
+  vine.object({
+    page: vine.number().optional(),
+    limit: vine.number().optional(),
+  })
+)
+
 export type CreateProfessionalSchema = Infer<typeof createProfessionalValidator>
 export type UpdateProfessionalSchema = Infer<typeof updateProfessionalValidator>
+export type GetProfessionalsSchema = Infer<typeof getProfessionalsValidator>
