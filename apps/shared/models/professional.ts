@@ -1,11 +1,12 @@
-import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import { generateSnowflake } from '#apps/shared/services/snowflake_service'
 import Identity from '#apps/shared/models/identity'
 import Address from '#apps/shared/models/address'
 import Contact from '#apps/shared/models/contact'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
 import ProfessionalType from '#apps/shared/models/professional_type'
+import Company from '#apps/shared/models/company'
 
 export default class Professional extends BaseModel {
   @column({ isPrimary: true })
@@ -37,6 +38,9 @@ export default class Professional extends BaseModel {
 
   @belongsTo(() => ProfessionalType)
   declare professionalType: BelongsTo<typeof ProfessionalType>
+
+  @manyToMany(() => Company)
+  declare companies: ManyToMany<typeof Company>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
