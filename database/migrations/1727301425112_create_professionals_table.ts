@@ -7,11 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.string('id').primary()
       table.string('oidc_id').unique().notNullable()
-      table
-        .string('professional_type_id')
-        .notNullable()
-        .references('id')
-        .inTable('professional_types')
+      table.string('profession_id').notNullable().references('id').inTable('professions')
       table.string('identity_id').notNullable().references('id').inTable('identities')
       table.string('address_id').notNullable().references('id').inTable('addresses')
       table.string('contact_id').notNullable().references('id').inTable('contacts')
