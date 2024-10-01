@@ -2,7 +2,7 @@ import Address from '#apps/shared/models/address'
 import Contact from '#apps/shared/models/contact'
 import Identity from '#apps/shared/models/identity'
 import Professional from '#apps/shared/models/professional'
-import ProfessionalType from '#apps/shared/models/professional_type'
+import Profession from '#apps/shared/models/profession'
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import { DateTime } from 'luxon'
 
@@ -28,7 +28,7 @@ export default class extends BaseSeeder {
       birthdate: DateTime.fromISO('2003-05-07'),
     })
 
-    const professionalType = await ProfessionalType.create({
+    const profession = await Profession.create({
       name: 'Software Engineer',
     })
 
@@ -37,7 +37,7 @@ export default class extends BaseSeeder {
       contactId: contact.id,
       identityId: identity.id,
       oidcId: '1234567890',
-      professionalTypeId: professionalType.id,
+      professionId: profession.id,
     })
   }
 }
