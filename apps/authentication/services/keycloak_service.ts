@@ -1,4 +1,5 @@
 import keycloakConfig from '#config/keycloak'
+import KeycloakException from '../exceptions/keycloak_exception.js'
 
 type WellKnownKeyResponse = {
   keys: {
@@ -34,6 +35,14 @@ export interface KeycloakResponseToken {
   'not-before-policy': number
   'session_state': string
   'scope': string
+}
+
+export type KeycloakCreateUserRequest = {
+  username: string
+  email: string
+  enabled: boolean
+  firstName: string
+  lastName: string
 }
 
 export default class KeycloakService {
@@ -84,5 +93,68 @@ export default class KeycloakService {
     const data: KeycloakResponseToken = (await response.json()) as KeycloakResponseToken
 
     return data.access_token
+  }
+
+  private async getAdminToken() {
+    const url = `${keycloakConfig.url}/realms/${keycloakConfig.realm}/protocol/openid-connect/token`
+
+    const data = {
+      grant_type: 'client_credentials',
+      client_id: keycloakConfig.clientId!,
+      client_secret: keycloakConfig.clientSecret!,
+    }
+
+    const response = await fetch(url, {
+      body: new URLSearchParams(data),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      method: 'POST',
+    })
+
+    const result: any = await response.json()
+
+    return result.access_token
+  }
+
+  async createUser(user: KeycloakCreateUserRequest) {
+    const url = `${keycloakConfig.url}/admin/realms/${keycloakConfig.realm}/users`
+
+    const token = await this.getAdminToken()
+
+    const parsedUser: KeycloakCreateUserRequest = {
+      ...user,
+      lastName: user.lastName.replace(' ', '-'),
+      firstName: user.firstName.replace(' ', '-'),
+    }
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(parsedUser),
+    })
+
+    if (!response.ok) {
+      const text = await response.text()
+      const textParsed = JSON.parse(text)
+      throw new KeycloakException(textParsed.errorMessage || 'failed to create user', {
+        status: response.status,
+        code: 'E_KEYCLOAK_CREATE_USER',
+      })
+    }
+
+    const locationHeader = response.headers.get('location')
+
+    if (!locationHeader) {
+      throw new KeycloakException('Location header not found', {
+        status: 500,
+        code: 'E_KEYCLOAK_CREATE_USER',
+      })
+    }
+
+    return locationHeader.split('/').pop()
   }
 }
