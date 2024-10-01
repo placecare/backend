@@ -27,4 +27,12 @@ export default class ProfessionalPolicy extends BasePolicy {
 
     return AuthorizationResponse.deny('You are not authorized to view professionals', 403)
   }
+
+  async create(payload: JWTPayload) {
+    if (this.roleService.verifyAccess(payload, Roles.CREATE_PROFESSIONAL)) {
+      return AuthorizationResponse.allow()
+    }
+
+    return AuthorizationResponse.deny('You are not authorized to create professionals', 403)
+  }
 }

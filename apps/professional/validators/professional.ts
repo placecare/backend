@@ -8,10 +8,24 @@ import { Infer } from '@vinejs/vine/types'
 export const createProfessionalValidator = vine.compile(
   vine.object({
     contact: vine.object({
-      email: vine.string().email().optional(),
+      email: vine.string().email(),
       mobilePhone: vine.string().optional(),
       landlinePhone: vine.string().optional(),
     }),
+    identity: vine.object({
+      firstname: vine.string(),
+      lastname: vine.string(),
+      birthDate: vine.date(),
+      gender: vine.string().nullable(),
+    }),
+    address: vine.object({
+      street: vine.string(),
+      city: vine.string(),
+      region: vine.string(),
+      country: vine.string(),
+      postalCode: vine.string(),
+    }),
+    profession: vine.string(),
   })
 )
 
