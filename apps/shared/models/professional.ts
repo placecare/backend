@@ -5,8 +5,8 @@ import Identity from '#apps/shared/models/identity'
 import Address from '#apps/shared/models/address'
 import Contact from '#apps/shared/models/contact'
 import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
-import ProfessionalType from '#apps/shared/models/professional_type'
 import Company from '#apps/shared/models/company'
+import Profession from '#apps/shared/models/profession'
 
 export default class Professional extends BaseModel {
   @column({ isPrimary: true })
@@ -16,7 +16,7 @@ export default class Professional extends BaseModel {
   declare oidcId: string
 
   @column()
-  declare professionalTypeId: string
+  declare professionId: string
 
   @column()
   declare identityId: string
@@ -36,8 +36,8 @@ export default class Professional extends BaseModel {
   @belongsTo(() => Contact)
   declare contact: BelongsTo<typeof Contact>
 
-  @belongsTo(() => ProfessionalType)
-  declare professionalType: BelongsTo<typeof ProfessionalType>
+  @belongsTo(() => Profession)
+  declare profession: BelongsTo<typeof Profession>
 
   @manyToMany(() => Company)
   declare companies: ManyToMany<typeof Company>

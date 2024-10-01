@@ -2,7 +2,7 @@ import { BaseModel, beforeCreate, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 import { generateSnowflake } from '#apps/shared/services/snowflake_service'
 
-export default class ProfessionalType extends BaseModel {
+export default class Profession extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
@@ -16,7 +16,7 @@ export default class ProfessionalType extends BaseModel {
   declare updatedAt: DateTime | null
 
   @beforeCreate()
-  static async generateUuid(model: ProfessionalType) {
+  static async generateUuid(model: Profession) {
     model.id = generateSnowflake()
   }
 }
